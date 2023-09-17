@@ -1,0 +1,12 @@
+<html><head><title>SAML Redirect...</title></head>
+<body onload="javascript:postSubmit()">
+  <script type='text/javascript'>
+    function postSubmit() {
+      document.forms[0].submit();
+    }
+  </script>
+  <form method='POST' action='{{ redirect_path }}'>
+    <input type='hidden' name='SAMLResponse' value='{{ saml_response }}'/>
+  </form>
+</body>
+</html>
