@@ -38,21 +38,15 @@ Then we can pass this as an arg to:
 python ./main.py --tenant-domain example.okta.com --skeleton-key WibbleWobble99 oauth --machine-name DC01 --windows-domain lab.local --code OAUTH_CODE_HERE
 ```
 
+## OktaRealFast
+
+This is a proxy tool for validating Okta FastPass JWT's before forwarding them to a target host.
+
+The idea is simple.. it gives the ability to see if a popup is going to be presented to the user during post-exploitation. 
+
+More information in the blog post https://blog.xpnsec.com/identity-providers-redteamers.
+
 ## malIDP
 
-A small (and very janky) SAML IDP which will sign SAML responses to authenticate as any user.
-
-### Installation
-
-```
-python3 -m venv env
-source ./env/bin/activate
-pip install -r requirements.txt
-```
-
-### Usage
-
-```bash
-python ./main.py --cert ./public_cert.crt --key ./private.key --metadata ./metadata.xml --issuer 'https://www.legitidp.com/'
-```
+This has been moved to its own repository at [https://github.com/xpn/malIDP](https://github.com/xpn/malIDP).
 
