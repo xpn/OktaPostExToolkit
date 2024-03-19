@@ -1,6 +1,6 @@
 ## Info
 
-This repo contains projects to support the "Okta for Red Teamers" blog post [here](https://www.trustedsec.com/?p=30372).
+This repo contains projects to support the "Okta for Red Teamers" blog post [here](https://blog.xpnsec.com/okta-for-redteamers/).
 
 ## Cloud-Nine
 
